@@ -325,7 +325,7 @@ Alexa Proactive Events API
 	**Reponse
 		202 Accepted
 
-		Status  CodeType	
+		Status 	CodeType	
 		400		Bad request.
 		403		Unauthorized
 		409		Conflict
@@ -338,17 +338,17 @@ Skill Manifest
 --------------
 
 ****Permissions
-	alexa::alerts:reminders:skill:readwrite	
-	alexa:devices:all:address:country_and_postal_code:read	
-	alexa::devices:all:geolocation:read	
-	alexa::devices:all:address:full:read	
-	alexa::devices:all:notifications:write	
-	alexa::household:lists:read	
-	alexa::household:lists:write	
-	alexa::profile:email:read	
-	alexa::profile:given_name:read	
-	alexa::profile:mobile_number:read	
-	alexa::profile:name:read
+		alexa::alerts:reminders:skill:readwrite	
+		alexa:devices:all:address:country_and_postal_code:read	
+		alexa::devices:all:geolocation:read	
+		alexa::devices:all:address:full:read	
+		alexa::devices:all:notifications:write	
+		alexa::household:lists:read	
+		alexa::household:lists:write	
+		alexa::profile:email:read	
+		alexa::profile:given_name:read	
+		alexa::profile:mobile_number:read	
+		alexa::profile:name:read
 
 ****Events
 	**Publications
@@ -427,10 +427,10 @@ Login With Amazon
 
 	**Reponse
 		{
-		"access_token":"<LWAaccessToken>",
-		"token_type":"bearer",
-		"expires_in":3600,
-		"refresh_token":"<refreshToken>"
+			"access_token":"<LWAaccessToken>",
+			"token_type":"bearer",
+			"expires_in":3600,
+			"refresh_token":"<refreshToken>"
 		}
 
 	# Get Refresh Token
@@ -450,10 +450,10 @@ Login With Amazon
 
 	**Reponse
 		{
-		"access_token":"<LWAaccessToken>",
-		"token_type":"bearer",
-		"expires_in":3600,
-		"refresh_token":"<refreshToken>"
+			"access_token":"<LWAaccessToken>",
+			"token_type":"bearer",
+			"expires_in":3600,
+			"refresh_token":"<refreshToken>"
 		}
 
 ****Available scopes
