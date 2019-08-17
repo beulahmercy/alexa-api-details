@@ -1,0 +1,561 @@
+------------------------
+Alexa Device Address API
+------------------------
+# Get Country/Region and Postal Code
+
+****Skill
+	**Permissions
+		alexa:devices:all:address:country_and_postal_code:read
+ 
+****Companion App
+	**Permission Card
+		AskForPermissionsConsent
+	**Permission
+		read::alexa:device:all:address:country_and_postal_code
+
+****Endpoint
+	**Base URL
+		https://api.amazonalexa.com
+
+	**Headers
+		Accept: application/json
+		Authorization: Bearer <apiAccessToken>
+
+	**Request
+		GET /v1/devices/<deviceId>/settings/address/countryAndPostalCode
+
+	**Reponse
+		{
+		  "countryCode" : "US",
+		  "postalCode" : "98109"
+		}
+		Response	Description
+		200 		OK	Successfully retrieved the country/region and postal code associated with the deviceId.
+		204 		No Content	The query did not return any results.
+		403 		Forbidden	The authentication token is invalid or doesn't have access to the resource.
+		404 		Not Found	The given URI is not able to locate a resource, for example because the deviceId is not valid.
+		405 		Method Not Allowed	The method is not supported.
+		429 		Too Many Requests	The skill has been throttled due to an excessive number of requests.
+		500 		Internal Error	An unexpected error occurred
+
+# Get Full Address
+
+****Skill
+	**Permissions
+		alexa::devices:all:address:full:read
+ 
+****Companion App
+	**Permission Card
+		AskForPermissionsConsent
+	**Permission
+		read::alexa:device:all:address
+
+*****Endpoint
+	**Base URL
+		https://api.amazonalexa.com
+
+	**Headers
+		Accept: application/json
+		Authorization: Bearer <apiAccessToken>
+
+	**Request
+		GET /v1/devices/<deviceId>/settings/address
+
+	**Reponse
+		{
+		  "stateOrRegion" : "WA",
+		  "city" : "Seattle",
+		  "countryCode" : "US",
+		  "postalCode" : "98109",
+		  "addressLine1" : "410 Terry Ave North",
+		  "addressLine2" : "",
+		  "addressLine3" : "aeiou",
+		  "districtOrCounty" : ""
+		}
+		Response	Description
+		200 		OK	Successfully retrieved the country/region and postal code associated with the deviceId.
+		204 		No Content	The query did not return any results.
+		403 		Forbidden	The authentication token is invalid or doesn't have access to the resource.
+		404 		Not Found	The given URI is not able to locate a resource, for example because the deviceId is not valid.
+		405 		Method Not Allowed	The method is not supported.
+		429 		Too Many Requests	The skill has been throttled due to an excessive number of requests.
+		500 		Internal Error	An unexpected error occurred
+
+==========================================================================================================================
+------------------
+Alexa Settings API
+------------------
+
+# Get the time zone
+
+****Companion App
+	set the device time zone
+
+****Endpoint
+	**Base URL
+		https://api.amazonalexa.com
+
+	**Headers
+		Accept: application/json
+		Authorization: Bearer <apiAccessToken>
+
+	**Request
+		GET /v2/devices/<deviceId>/settings/System.timeZone
+
+	**Reponse
+		"Africa/Abidjan"
+
+		Response	Description
+		200			Successfully retrieved the setting.
+		204			No setting value exists.
+		400			Bad request.
+		401			Token is malformed.
+		403			The authentication token is invalid or has expired.
+		404			Not found. Applies when the given URI is not able to locate a resource, such as if the deviceId is invalid.
+		406			Not acceptable. The header is not in an acceptable format.
+		429			Request is throttled. This response occurs if the rate limit is exceeded.
+		503			Service unavailable
+==========================================================================================================================
+-----------------------
+Alexa Location Services
+-----------------------
+
+# Get Geo Co-ordinates
+
+****Skill
+	**Permissions
+		alexa::devices:all:geolocation:read
+
+****Companion App
+	**Permission Card
+		AskForPermissionsConsent
+	**Permission		
+		alexa::devices:all:geolocation:read
+
+****Fulfillment
+	If Alexa request contains
+		context.System.device.supportedInterfaces.Geolocation
+	Then
+		Read the co-ordicaion from
+	
+"Geolocation":{
+      "timestamp":"2019-08-17T11:48:01Z",
+      "coordinate":{
+         "latitudeInDegrees":12.9298026,
+         "longitudeInDegrees":80.2050419,
+         "accuracyInMeters":24.360000610351562
+      },
+      "heading":{
+         "directionInDegrees":0
+      },
+      "speed":{
+         "speedInMetersPerSecond":0
+      }
+   }
+==========================================================================================================================
+--------------------------
+Alexa Proactive Events API
+--------------------------
+
+# Send notifications
+
+****Skill
+	**Permissions
+		alexa::devices:all:notifications:write
+
+****Events
+	**Publication
+		AMAZON.WeatherAlert.Activated
+		AMAZON.SportsEvent.Updated
+		AMAZON.MessageAlert.Activated
+		AMAZON.OrderStatus.Updated
+		AMAZON.Occasion.Updated
+		AMAZON.TrashCollectionAlert.Activated
+		AMAZON.MediaContent.Available
+		AMAZON.SocialGameInvite.Available
+		
+	**Subscription (Event triggered when customer subscribe to receive events from skill)
+		SKILL_PROACTIVE_SUBSCRIPTION_CHANGED
+ 
+# Add proactive events to Skill (using ASK CLI commands)
+
+****Clone skill
+****Edit skill.json
+	"events": {
+      "publications": [
+        {
+          "eventName": "AMAZON.OrderStatus.Updated"
+        },
+        {
+          "eventName": "AMAZON.MessageAlert.Activated"
+        }
+      ],
+      "subscriptions": [
+        {
+          "eventName": "SKILL_PROACTIVE_SUBSCRIPTION_CHANGED"
+        }
+      ],
+      "endpoint": {
+        "uri": "<endpoint>",
+        "sslCertificateType": "Wildcard"
+      }
+    },
+    "permissions": [
+      {
+        "name": "alexa::devices:all:notifications:write"
+      }
+    ]
+****Update skill
+****Get skill success or fail status
+
+# Send proactive events from skill service
+
+****Skill
+	Get client id and client secret from Alexa Skill Messaging section
+
+****Endpoint
+	# Get Authenticate
+	**Base URL
+		https://api.amazon.com
+
+	**Headers
+		Content-Type: application/x-www-form-urlencoded
+		grant_type=client_credentials&client_id=<clientId>&client_secret=<clientSecret>&scope=alexa::proactive_events
+
+	**Request
+		POST /auth/o2/token
+
+	**Reponse
+		{
+			"access_token":"Atc|MQEWYJxEnP3I1ND03ZzbY_NxQkA7Kn7Aioev_OfMRcyVQ4NxGzJMEaKJ8f0lSOiV-yW270o6fnkI",
+			"expires_in":3600,
+			"scope":"alexa::proactive_events",
+			"token_type":"Bearer"
+		}
+
+		Status  CodeType	
+		400		INVALID_REQUEST	
+		400		UNAUTHORIZED_CLIENT	
+		400		UNSUPPORTED_GRANT_TYPE
+		400		INVALID_SCOPE	
+		401		INVALID_CLIENT	
+		500		SERVER_ERROR	
+		503		SERVICE_UNAVAILABLE
+
+# Send proactive AMAZON.MessageAlert.Activated event
+
+	**Base URL
+		https://api.amazon.com
+
+	**Headers
+		Content-type: application/json
+		Authorization: Bearer <accessToken>
+
+	**Request
+		POST /v1/proactiveEvents/stages/development
+
+	**Body
+		Broadcast event
+		{
+		  "timestamp": "2018-06-18T22:10:01.00Z",
+		  "referenceId": "unique-id-of-this-instance",
+		  "expiryTime": "2018-06-19T22:10:01.00Z",
+		  "event": "<event_payload>",
+		  "localizedAttributes": "[array of localized attributes]",
+		  "relevantAudience": {
+			"type": "Multicast",
+			"payload": {}
+		  }
+		}
+
+		Individual events
+		{
+			"timestamp": "2018-06-18T22:10:01.00Z",
+			"referenceId": "unique-id-of-this-instance",
+			"expiryTime": "2018-06-19T22:10:01.00Z",
+			"event": "<event_payload>",
+			"localizedAttributes": "[array of localized attributes]",
+			"relevantAudience": {
+				"type": "Unicast",
+				"payload": {
+					"user": "userId"
+				}
+			}
+		}
+
+		Sample Body
+		{  
+		   "timestamp":"2019-08-17T09:10:01.00Z",
+		   "referenceId":"af48afe9-25c2-4bbd-8149-ed516a5fb33e",
+		   "expiryTime":"2019-08-17T22:10:01.00Z",
+		   "event":{  
+			  "name":"AMAZON.MessageAlert.Activated",
+			  "payload":{  
+				 "state":{  
+					"status":"UNREAD",
+					"freshness":"NEW"
+				 },
+				 "messageGroup":{  
+					"creator":{  
+					   "name":"localizedattribute:sender"
+					},
+					"count":1,
+					"urgency":"URGENT"
+				 }
+			  }
+		   },
+		   "localizedAttributes":[  
+			  {  
+				 "locale":"en-US",
+				 "sender":"Sample Proactive Event"
+			  },
+			  {  
+				 "locale":"en-IN",
+				 "sender":"Sample Proactive Event"
+			  }
+		   ],
+		   "relevantAudience":{  
+			  "type":"Multicast",
+			  "payload":{  
+
+			  }
+		   }
+		}
+
+	**Reponse
+		202 Accepted
+
+		Status  CodeType	
+		400		Bad request.
+		403		Unauthorized
+		409		Conflict
+		429		Too many requests
+		500		Internal server error
+
+==========================================================================================================================
+--------------
+Skill Manifest
+--------------
+
+****Permissions
+	alexa::alerts:reminders:skill:readwrite	
+	alexa:devices:all:address:country_and_postal_code:read	
+	alexa::devices:all:geolocation:read	
+	alexa::devices:all:address:full:read	
+	alexa::devices:all:notifications:write	
+	alexa::household:lists:read	
+	alexa::household:lists:write	
+	alexa::profile:email:read	
+	alexa::profile:given_name:read	
+	alexa::profile:mobile_number:read	
+	alexa::profile:name:read
+
+****Events
+	**Publications
+		AMAZON.WeatherAlert.Activated
+		AMAZON.SportsEvent.Updated
+		AMAZON.MessageAlert.Activated
+		AMAZON.OrderStatus.Updated
+		AMAZON.Occasion.Updated
+		AMAZON.TrashCollectionAlert.Activated
+		AMAZON.MediaContent.Available
+		AMAZON.SocialGameInvite.Available
+	**Subscriptions
+		SKILL_PROACTIVE_SUBSCRIPTION_CHANGED
+		SKILL_PERMISSION_CHANGED
+		SKILL_PERMISSION_ACCEPTED
+		
+==========================================================================================================================
+-----------------
+Login With Amazon
+-----------------
+
+****Set up security profile
+		Create a security profile in Amazon dashboard https://developer.amazon.com/dashboard Settings -> Security Profiles
+		Get Client id and secret
+		Set Allowed Return URLs (redirectURI)
+
+****Endpoint
+	# Get Authenticate - IMPLICIT GRANT
+	**Base URL
+		https://www.amazon.com
+
+	**Request
+		GET /ap/oa
+
+	**Parameters
+		client_id=<clientId>
+		&scope=profile
+		&response_type=token
+		&state=208257577ll0975l93l2l59l895857093449424
+		&redirect_uri=<redirectURI>
+
+	**Reponse
+		Location: <redirectURI>/cb?access_token=<accessToken>&state=208257577ll0975l93l2l59l895857093449424&token_type=bearer&expires_in=3600&scope=profile
+
+	# Get Authenticate - AUTHORIZATION GRANT - Authorization URI
+	**Base URL
+		https://www.amazon.com
+
+	**Request
+		GET /ap/oa
+
+	**Parameters
+		client_id=<clientId>
+		&scope=profile
+		&response_type=code
+		&state=208257577ll0975l93l2l59l895857093449424
+		&redirect_uri=<redirectURI>
+
+	**Reponse
+		<redirectURI>/cb?code=SplxlOBezQQYbYS6WxSbIA&state=208257577ll0975l93l2l59l895857093449424
+
+	# Get Access Token - AUTHORIZATION GRANT - Access Token URI
+
+	**Base URL
+		https://api.amazon.com
+
+	**Request
+		POST /auth/o2/token
+
+	**Headers
+		Content-Type: application/x-www-form-urlencoded
+		grant_type=authorization_code
+		&code=<authorizationCode>
+		&client_id=<clientId>
+		&client_secret=<clientSecret>
+
+	**Reponse
+		{
+		"access_token":"<LWAaccessToken>",
+		"token_type":"bearer",
+		"expires_in":3600,
+		"refresh_token":"<refreshToken>"
+		}
+
+	# Get Refresh Token
+
+	**Base URL
+		https://api.amazon.com
+
+	**Request
+		POST /auth/o2/token
+
+	**Headers
+		Content-Type: application/x-www-form-urlencoded
+		grant_type=refresh_token
+		&refresh_token=<refreshToken from previous response>
+		&client_id=<clientId>
+		&client_secret=<clientSecret>
+
+	**Reponse
+		{
+		"access_token":"<LWAaccessToken>",
+		"token_type":"bearer",
+		"expires_in":3600,
+		"refresh_token":"<refreshToken>"
+		}
+
+****Available scopes
+	**Customer profile 
+		profile
+		profile:user_id
+		postal_code
+	**SMAPI
+		alexa::ask:skills:read
+		alexa::ask:skills:readwrite
+		alexa::ask:models:read
+		alexa::ask:models:readwrite
+		alexa::ask:skills:test
+==========================================================================================================================
+----------------------
+Utterance Profiler API
+----------------------
+
+Test sample utterances
+
+	**Base URL
+		https://api.amazonalexa.com
+
+	**Request
+		POST /v1/skills/<skillI>}/stages/<stage>/interactionModel/locales/<local>}/profileNlu
+
+	**Headers
+		Content-Type: application/json
+		Authorization: <LWAaccessToken>
+
+	**Body
+		{
+		  "utterance": "string",
+		  "multiTurnToken": "string"
+		}
+
+	**Reponse
+		{
+		  "sessionEnded": true,
+		  "selectedIntent": {
+			"name": "string",
+			"confirmationStatus": "NONE",
+			"slots": {
+			  "slotName": {
+				"name": "string",
+				"value": "string",
+				"confirmationStatus": "NONE",
+				"resolutions": {
+				  "resolutionsPerAuthority": [
+					{
+					  "authority": "string",
+					  "status": {
+						"code": "ER_SUCCESS_MATCH"
+					  },
+					  "values": [
+						{
+						  "name": "string",
+						  "id": "string"
+						}
+					  ]
+					}
+				  ]
+				}
+			  }
+			}
+		  },
+		  "consideredIntents": [
+			{
+			  "name": "string",
+			  "confirmationStatus": "NONE",
+			  "slots": {
+				"slotName": {
+				  "name": "string",
+				  "value": "string",
+				  "confirmationStatus": "NONE",
+				  "resolutions": {
+					"resolutionsPerAuthority": [
+					  {
+						"authority": "string",
+						"status": {
+						  "code": "ER_SUCCESS_MATCH"
+						},
+						"values": [
+						  {
+							"name": "string",
+							"id": "string"
+						  }
+						]
+					  }
+					]
+				  }
+				}
+			  }
+			}
+		  ],
+		  "multiTurn": {
+			"dialogAct": {
+			  "type": "Dialog.ElicitSlot",
+			  "targetSlot": "string"
+			},
+			"token": "string",
+			"prompt": "string"
+		  }
+		}
+	==========================================================================================================================
