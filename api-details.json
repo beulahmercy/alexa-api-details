@@ -245,7 +245,8 @@ Alexa Proactive Events API
 # Send proactive AMAZON.MessageAlert.Activated event
 
 	**Base URL
-		https://api.amazon.com
+		https://api.amazonalexa.com 
+		apiEndpoint in the Alexa request - context.System.apiEndpoint
 
 	**Headers
 		Content-type: application/json
@@ -283,7 +284,7 @@ Alexa Proactive Events API
 			}
 		}
 
-		Sample Body
+		Sample Body - Multicast
 		{  
 		   "timestamp":"2019-08-17T09:10:01.00Z",
 		   "referenceId":"af48afe9-25c2-4bbd-8149-ed516a5fb33e",
@@ -321,6 +322,45 @@ Alexa Proactive Events API
 			  }
 		   }
 		}
+		
+		Sample Body - Unicast
+		{
+		   "timestamp":"2019-08-19T09:44:08.301Z",
+		   "referenceId":"af48afe9-25c2-4bbd-8149-ed516a5fb33e",
+		   "expiryTime":"2019-08-19T15:44:08.301Z",
+		   "event":{
+			  "name":"AMAZON.MessageAlert.Activated",
+			  "payload":{
+				 "state":{
+					"status":"UNREAD",
+					"freshness":"NEW"
+				 },
+				 "messageGroup":{
+					"creator":{
+					   "name":"localizedattribute:senderName"
+					},
+					"count":1,
+					"urgency":"URGENT"
+				 }
+			  }
+		   },
+		   "localizedAttributes":[
+			  {
+				 "locale":"en-US",
+				 "senderName":"Sample Proactive Event to specific user"
+			  },
+			  {
+				 "locale":"en-IN",
+				 "senderName":"Sample Proactive Event"
+			  }
+		   ],
+		   "relevantAudience":{
+			  "type":"Unicast",
+			  "payload":{
+				"user": "amzn1.ask.account.AEB2IIFXK4USTOG25CHJLZEUC6U37IQOPB3LHWELHI7OIF3TN6VVJ2JF4TRXILNISLHZRIFJPG4NQE4BGJTYCQPDL5BHHAAFD3OZ4H5VUME5GAHK5AYFZDSTPC3N5HXV7XXFGZTPTEDQKCGTTPLLT7FYXJC6OA7IHKR67YR6EM4PJJOWMR23BMRV2AR557KVXA4VQ5X6INPWT2Y"
+			  }
+		   }
+		}
 
 	**Reponse
 		202 Accepted
@@ -331,7 +371,10 @@ Alexa Proactive Events API
 		409		Conflict
 		429		Too many requests
 		500		Internal server error
-
+		
+	**Alexa Devices - Alexa, what are my notifications?
+		-> Echo Dot - chimes with green light.
+		-> Echo Show - No chime.
 ==========================================================================================================================
 --------------
 Skill Manifest
