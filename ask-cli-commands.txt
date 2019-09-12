@@ -1,3 +1,14 @@
 ask clone -s amzn1.ask.skill.600228e9-51f3-4d10-8b20-3fd36d0a0c08
 ask api update-skill -s amzn1.ask.skill.600228e9-51f3-4d10-8b20-3fd36d0a0c08 -f tiaa/skill.json
 ask api get-skill-status -s amzn1.ask.skill.600228e9-51f3-4d10-8b20-3fd36d0a0c08
+
+
+{
+	"event_type": "TaxNotification",	
+	"context": {
+		"System": {
+			"application": {
+				"applicationId": "amzn1.ask.skill.600228e9-51f3-4d10-8b20-3fd36d0a0c08"
+			}
+	}
+}
