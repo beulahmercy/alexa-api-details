@@ -12,3 +12,38 @@ ask api get-skill-status -s amzn1.ask.skill.600228e9-51f3-4d10-8b20-3fd36d0a0c08
 			}
 	}
 }
+
+
+const skill = alexa.SkillBuilders.custom()
+    .addRequestHandlers(
+        //add request handlers
+    )
+    .addRequestInterceptors(
+        //add request interceptors
+    )
+    .addResponseInterceptors(
+        //add response interceptors
+    )
+    .addErrorHandlers(
+        //add error handlers
+    )
+    .create();
+
+exports.handler = async function (event, context) {
+    console.log('Request ==>', JSON.stringify(event));
+    let response;
+    try {
+       if(utils.hasValue(event.body)){
+            console.log('Request Body ==>', JSON.stringify(event.body));
+	    const decoded = Buffer.from(event.body, "base64").toString();
+            response = await skill.invoke(JSON.parse(event.body), context);
+        } else {
+            response = await skill.invoke(event, context);
+        }
+    } catch (err) {
+        console.log('Error ==>', JSON.stringify(err));
+        throw err;
+    }
+    console.log('Response ==>', JSON.stringify(response));
+    return JSON.stringify(response);
+}
